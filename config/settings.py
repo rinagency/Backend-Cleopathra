@@ -57,7 +57,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -158,3 +158,10 @@ REST_FRAMEWORK = {
 PASSWORD_RESET_TIMEOUT=900 
 
 AUTH_USER_MODEL = 'accounts.User'
+
+EMAIL_HOST = ("smtp.gmail.com")
+EMAIL_PORT = ("587")
+EMAIL_HOST_USER = ("ronnyklk18@gmail.com")
+EMAIL_HOST_PASSWORD = ("umfusthjxucmjeyk")
+EMAIL_USE_TLS = True
+DEFAUL_FROM_EMAIL = ("ronnyklk18@gmail.com")
