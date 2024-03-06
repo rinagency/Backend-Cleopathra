@@ -72,7 +72,7 @@ class SendPasswordResetEmailSerializer(serializers.Serializer):
             user = User.objects.get(email=email)
             uid = urlsafe_base64_encode(force_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
-            reset_link = 'http://localhost:3000/api/user/reset/' + uid + '/' + token
+            reset_link = 'https://aitomyplus-a2761.web.app/api/user/reset/' + uid + '/' + token
 
             # Utiliza la clase EmailAccount para enviar el correo electrónico
             email_account = EmailAccount(account=user)
