@@ -63,7 +63,7 @@ class EmailAccount:
             {
                 "email": self.account.email,
                 "subject": _("Reset Your Password"),
-                "text_content": f"Click the following link to reset your password: {reset_link}",
+                "text_content": f"Haz click en el siguiente enlace para restablecer tu contraseña: {reset_link}",
             }
         ]
 
