@@ -15,6 +15,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
       'password':{'write_only':True}
     }
 
+    # Validating Password and Confirm Password while Registration
+  def validate(self, attrs):
+      email = attrs.get('email')
+      if User.objects.filter(email=email).exists():
+          raise serializers.ValidationError("This email is already registered.")
+
   # Validating Password and Confirm Password while Registration
   def validate(self, attrs):
     password = attrs.get('password')
