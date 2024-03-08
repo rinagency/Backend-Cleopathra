@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from ..renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
+from datetime import timedelta
 
 # Generate Token Manually
 def get_tokens_for_user(user):
@@ -26,19 +27,28 @@ class UserRegistrationView(APIView):
     return Response({'token':token, 'msg':'Registration Successful'}, status=status.HTTP_201_CREATED)
 
 class UserLoginView(APIView):
-  renderer_classes = [UserRenderer]
-  permission_classes = [AllowAny]
-  def post(self, request, format=None):
-    serializer = UserLoginSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    email = serializer.data.get('email')
-    password = serializer.data.get('password')
-    user = authenticate(email=email, password=password)
-    if user is not None:
-      token = get_tokens_for_user(user)
-      return Response({'token':token, 'msg':'Login Success'}, status=status.HTTP_200_OK)
-    else:
-      return Response({'errors':{'non_field_errors':['Email or Password is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
+    renderer_classes = [UserRenderer]
+    permission_classes = [AllowAny]
+
+    def post(self, request, format=None):
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        email = serializer.data.get('email')
+        password = serializer.data.get('password')
+        remember_me = serializer.data.get('remember_me', False)
+
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            token = get_tokens_for_user(user)
+            
+            # Actualizar la duración del token de acceso si 'remember_me' es True
+            if remember_me:
+                token['access'].set_exp(timedelta(days=30))
+
+            return Response({'token': token, 'msg': 'Login Success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'errors': {'non_field_errors': ['Email or Password is not Valid']}}, status=status.HTTP_404_NOT_FOUND)
+
 
 class UserProfileView(APIView):
   renderer_classes = [UserRenderer]
